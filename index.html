@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vowel Counter</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <h1>Vowel Counter</h1>
+
+    <form method="post" class="card">
+      <label for="text">Enter text</label>
+      <textarea id="text" name="text" rows="6" placeholder="Type or paste text here...">{{ text }}</textarea>
+      <div class="actions">
+        <button type="submit" class="btn">Count Vowels</button>
+      </div>
+    </form>
+
+    {% if count is not none %}
+    <div class="result card">
+      <p>Vowel count: <strong>{{ count }}</strong></p>
+    </div>
+    {% endif %}
+
+    <footer class="muted">Simple Flask app — clean vibe styling</footer>
+  </main>
+</body>
+</html>
