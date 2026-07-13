@@ -1,30 +1,68 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vowel Counter</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-  <main class="container">
-    <h1>Vowel Counter</h1>
-
-    <form method="post" class="card">
-      <label for="text">Enter text</label>
-      <textarea id="text" name="text" rows="6" placeholder="Type or paste text here...">{{ text }}</textarea>
-      <div class="actions">
-        <button type="submit" class="btn">Count Vowels</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resume Builder — Preview UI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body class="bg-light">
+    <div class="container py-4">
+      <div class="row">
+        <div class="col-md-5">
+          <h3>Resume Builder</h3>
+          <form id="resume-form">
+            <div class="mb-2">
+              <label class="form-label">Full name</label>
+              <input class="form-control" name="name" value="{{ sample.name }}">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Title</label>
+              <input class="form-control" name="title" value="{{ sample.title }}">
+            </div>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" name="email" placeholder="Email" value="{{ sample.email }}">
+              </div>
+              <div class="col">
+                <input class="form-control" name="phone" placeholder="Phone" value="{{ sample.phone }}">
+              </div>
+            </div>
+            <div class="mb-2 mt-2">
+              <input class="form-control" name="linkedin" placeholder="LinkedIn" value="{{ sample.linkedin }}">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Professional summary</label>
+              <textarea class="form-control" name="summary" rows="3">{{ sample.summary }}</textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Experiences (one per line: Role | Company | Dates | Details)</label>
+              <textarea class="form-control" name="experiences" id="experiences" rows="4">{% for e in sample.experiences %}{{ e.role }} | {{ e.company }} | {{ e.dates }} | {{ e.details }}
+{% endfor %}</textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Education (one per line: Degree | School | Dates)</label>
+              <textarea class="form-control" name="education" id="education" rows="2">{% for ed in sample.education %}{{ ed.degree }} | {{ ed.school }} | {{ ed.dates }}
+{% endfor %}</textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Skills (one per line)</label>
+              <textarea class="form-control" name="skills" id="skills" rows="2">{% for s in sample.skills %}{{ s }}
+{% endfor %}</textarea>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" id="preview-btn" class="btn btn-primary">Preview</button>
+              <button type="button" id="reset-btn" class="btn btn-outline-secondary">Reset</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-7">
+          <h5>Live Preview</h5>
+          <div id="preview" class="p-3 bg-white border rounded shadow-sm"></div>
+        </div>
       </div>
-    </form>
-
-    {% if count is not none %}
-    <div class="result card">
-      <p>Vowel count: <strong>{{ count }}</strong></p>
     </div>
-    {% endif %}
-
-    <footer class="muted">Simple Flask app — clean vibe styling</footer>
-  </main>
-</body>
+    <script src="/static/js/app.js"></script>
+  </body>
 </html>

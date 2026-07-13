@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body>
+    <div class="resume p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h1 class="mb-0">{{ name }}</h1>
+          <p class="muted mb-1">{{ title }}</p>
+        </div>
+        <div class="text-end">
+          <div>{{ email }}</div>
+          <div>{{ phone }}</div>
+          <div>{{ linkedin }}</div>
+        </div>
+      </div>
+      <hr>
+      {% if summary %}
+      <section>
+        <h6>Summary</h6>
+        <p>{{ summary }}</p>
+      </section>
+      {% endif %}
+      {% if experiences %}
+      <section>
+        <h6>Experience</h6>
+        {% for e in experiences %}
+        <div class="mb-2">
+          <strong>{{ e.role }}</strong> — <em>{{ e.company }}</em>
+          <div class="muted small">{{ e.dates }}</div>
+          <div>{{ e.details }}</div>
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+      {% if education %}
+      <section>
+        <h6>Education</h6>
+        {% for ed in education %}
+        <div class="mb-2">
+          <strong>{{ ed.degree }}</strong>, {{ ed.school }}
+          <div class="muted small">{{ ed.dates }}</div>
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+      {% if skills %}
+      <section>
+        <h6>Skills</h6>
+        <div class="d-flex flex-wrap gap-2">
+          {% for s in skills %}
+          <span class="badge bg-secondary">{{ s }}</span>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </body>
+</html>

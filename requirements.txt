@@ -1,4 +1,2 @@
 Flask>=2.0
 
-# Optional: pin versions for deployment
-# Werkzeug>=2.0
