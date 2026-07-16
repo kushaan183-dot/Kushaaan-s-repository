@@ -1,45 +1,43 @@
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
+import mysql.connector
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+            username = request.form.get('username')
+            password = request.form.get('password')
+            mydb = mysql.connector.connect(
+                host="sql.freedb.tech",
+                user="u_pktLem",
+                password="q0qydGoWOpQK",
+                database="freedb_MqwGL5sn"
+            )
+            mycursor = mydb.cursor()
+            mycursor.execute("SELECT * FROM loginDetails WHERE username=%s AND password=%s", (username, password))
+            account = mycursor.fetchone()
+            if account:
+                print("success")
+                name = account[1]
+                id = account[0]
+                msg = "logged in successfully"
+                return render_template('logout.html', msg=msg, name=name, id=id)
+    else:
+        msg = "invalid username or password"
+        return render_template('login.html', msg=msg)
+    return render_template('login.html')
 
-@app.route('/')
-def index():
-    sample = {
-        'name': 'Jane Doe',
-        'title': 'Product Designer',
-        'email': 'jane@example.com',
-        'phone': '(555) 123-4567',
-        'linkedin': 'linkedin.com/in/janedoe',
-        'summary': 'Designs delightful user experiences for web and mobile. Skilled in research, prototyping, and visual design.',
-        'experiences': [
-            {'role': 'Senior Product Designer', 'company': 'Acme Co.', 'dates': '2021–Present', 'details': 'Led redesigned onboarding; improved activation by 30%.'},
-            {'role': 'Product Designer', 'company': 'Beta Labs', 'dates': '2018–2021', 'details': 'Built design systems and shipped 10+ features.'}
-        ],
-        'education': [
-            {'degree': 'B.Des, Interaction Design', 'school': 'State University', 'dates': '2014–2018'}
-        ],
-        'skills': ['Figma', 'User Research', 'Prototyping', 'HTML/CSS']
-    }
-    return render_template('index.html', sample=sample)
+@app.route('/logout')
+def logout():
+    name=''
+    id=''
+    msg="logged out successfully"
+    return render_template('login.html',msg=msg,name=name,id=id)
 
-
-@app.route('/preview', methods=['POST'])
-def preview():
-    data = request.get_json() or {}
-    experiences = data.get('experiences', [])
-    education = data.get('education', [])
-    skills = data.get('skills', [])
-    return render_template('resume.html',
-                           name=data.get('name', ''),
-                           title=data.get('title', ''),
-                           email=data.get('email', ''),
-                           phone=data.get('phone', ''),
-                           linkedin=data.get('linkedin', ''),
-                           summary=data.get('summary', ''),
-                           experiences=experiences,
-                           education=education,
-                           skills=skills)
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
 
 if __name__ == '__main__':
