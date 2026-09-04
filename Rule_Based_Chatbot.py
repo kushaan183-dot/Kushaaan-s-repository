@@ -6,11 +6,11 @@ destinations={
     "mountains": ["Swiss Alps", "Rocky Mountains", "Himalayas", "Andes"],
     "cities": ["New York", "Paris", "Tokyo", "London"]
 }
-jokes={
+jokes=[
     "Why don't programmers like nature? It has too many bugs.",
     "Why did the computer go to the doctor? It caught a virus.",
     "Why do travelers always feel warm? Because they have a lot of hot spots.",
-}
+]
 def normalize_input(text):
     return re.sub(r"\s+"," ",text.strip().lower())
 def recomend():
@@ -48,7 +48,7 @@ def packing_tips():
     print(Fore.LIGHTGREEN_EX+"TextBot: 4. Use packing cubes to organize your luggage.")
     print(Fore.LIGHTGREEN_EX+"TextBot: 5. Check the weather forecast for your destination and pack accordingly.")
 def tell_joke():
-    print(Fore.LIGHTGREEN_EX+f"TextBot: Here's a joke {random_choice(jokes)}")
+    print(Fore.LIGHTGREEN_EX+f"TextBot: Here's a joke {random.choice(list(jokes))}")
 
 def show_help():
     print(Fore.LIGHTGREEN_EX+"TextBot: I can help you with the following commands:")
@@ -61,18 +61,19 @@ def chat():
     print(Fore.LIGHTGREEN_EX+f"TextBot: Hello {name}, how can I assist you today?")
     show_help()
     while True:
+        chat()
         user_input=input(Fore.LIGHTGREEN_EX+f"{name}: ")
         user_input=normalize_input(user_input)
-        if "recomend" or "suggest" in user_input:
+        if "recomend" in user_input or "suggest" in user_input:
             recomend()
 
-        elif "pack" or "packing tips" in user_input:
+        elif "pack" in user_input or "packing tips" in user_input:
             packing_tips()
-        elif "joke" or "funny"in user_input:
-            joke()
+        elif "joke" in user_input or "funny"in user_input:
+            tell_joke()
         elif "help" in user_input:
             show_help()
-        elif "exit" or "bye" or "quit" in user_input:
+        elif "exit" in user_input or "bye" in user_input or "quit" in user_input:
             print(Fore.LIGHTGREEN_EX+"TextBot: Goodbye! Have a great day!")
             break
         else:
