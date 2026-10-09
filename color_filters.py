@@ -1,54 +1,64 @@
 import cv2
-import matplotlib.pyplot
-import colorama
+import numpy as np
 
-def apply_color_filter(image,filter_type):
-    """Apply the specified color filter to image"""
-    filter_image=image.copy()
-    if filter_type=="red_tint":
-        filter_image[:,:,0]=0
-        filter_image[:,:,1]=0
-    elif filter_type=="blue_tint":
-        filter_image[:,:,1]=0
-        filter_image[:,:,2]=0
-    elif filter_type=="green_tint":
-        filter_image[:,:,0]=0
-        filter_image[:,:,2]=0
-    elif filter_type=="increase_red":
-        filter_image[:,:,2]=cv2.add(filter_image[:,:,2], 50)
-    elif filter_type=="decrease_blue":
-        filter_image[:,:,0]=cv2.subtract(filter_image[:,:,0], 50)
-    return filter_image
-image_path='example_of_rotation.jpg'
-image=cv2.imread(image_path)
-
-if image is None:
-    print(f"{Font.RED}Error: image not found")
-else:
-    filter_type="original"
-    print("Press the folowing keys to aply the required tint")
-    print("r-red tint")
-    print("g-green tint")
-    print("b-blue tint")
-    print("i-increase red intensity")
-    print("d-decrease blue intensity")
-    print("q-Quit")
+def apply_color_filter(image,ftype):
+    img=image.copy()
+    if ftype=='red':
+        img[:,:,1]=img[:,:,0]=0
+    elif ftype=='green':
+        img[:,:,0]=img[:,:,2]=0
+    elif ftype=='blue':
+        img[:,:,1]=img[:,:,2]=0
+    elif ftype=='sobel':
+        gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        sx=cv2.Sobel(gray,cv2.CV_64F,1,0,ksize=5)
+        sy=cv2.Sobel(gray,cv2.CV_64F,0,1,ksize=5)
+        sob=cv2.bitwise_or(sx.astype('uint8'), sy.astype('uint8'))
+        img=cv2.cvtColor(sob,cv2.COLOR_GRAY2BGR)
+    elif ftype=='canny':
+        gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        can=cv2.Canny(gray,100,200)
+        img=cv2.cvtColor(can,cv2.COLOR_GRAY2BGR)
+    elif ftype=='cartoon':
+        gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        gray=cv2.medianBlur(gray,5)
+        edges=cv2.adaptiveThreshold(
+            gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,9,9
+        )
+        color=cv2.bilateralFilter(img,9,250,250)
+        img=cv2.bitwise_and(color,color,mask=edges)
+    return img
+def main():
+    cap=cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open video stream.")
+        return
+    ftype='original'
+    print("Press 'r' for red filter, 'g' for green filter, 'b' for blue filter, 's' for sobel filter, 'c' for canny filter, 't' for cartoon filter, and 'q' to quit.")
     while True:
-        filter_image=apply_color_filter(image,filter_type)
-        key=cv2.waitKey[0] & 0xFF
-        if key==ord("r"):
-            filter_type="red_tint"
-        elif key==ord("g"):
-            filter_type="green_tint"
-        elif key==ord("b"):
-            filter_type="blue_tint"
-        elif key==ord("i"):
-            filter_type="increase_red"
-        elif key==ord("d"):
-            filter_type="decrease_blue"
-        elif key==ord("q"):
-            print("Exiting")
+        ret,frame=cap.read()
+        if not ret:
+            print("Error: Could not read frame.")
             break
-        else:
-            print(f"{Font.RED}Error: Please use keys 'r','b','g','i','d' or 'q'")
-cv2.destroyAllWindows()
+        out=apply_color_filter(frame,ftype)
+        cv2.imshow("Filter",out)
+        key=cv2.waitKey(1)&0xFF
+        if key==ord('q'):
+            break
+        elif key==ord('r'):
+            ftype='red'
+        elif key==ord('g'):
+            ftype='green'
+        elif key==ord('b'):
+            ftype='blue'
+        elif key==ord('s'):
+            ftype='sobel'
+        elif key==ord('c'):
+            ftype='canny'
+        elif key==ord('t'):
+            ftype='cartoon'
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__=="__main__":
+    main()
