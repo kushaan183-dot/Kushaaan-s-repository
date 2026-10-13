@@ -8,12 +8,12 @@ SCROLL_DELAY=1
 CAMERA_WIDTH,CAM_HEIGHT=640,480
 def detect_gesture(landmarks,handedness):
     fingers=[]
-    tips=[mp.hands.HandLandmark.INDEX_FINGER_TIP,mp.hands.HandLandmark.MIDDLE_FINGER_TIP,mp.hands.HandLandmark.RING_FINGER_TIP,mp.hands.HandLandmark.PINKY_TIP]
+    tips=[mp_hands.HandLandmark.INDEX_FINGER_TIP,mp_hands.HandLandmark.MIDDLE_FINGER_TIP,mp_hands.HandLandmark.RING_FINGER_TIP,mp_hands.HandLandmark.PINKY_TIP]
     for tip in tips:
-        if landmarks.landmarks[tip].y<landmarks.landmarks[tip-2].y:
+        if landmarks.landmark[tip].y<landmarks.landmark[tip-2].y:
             fingers.append(1)
-        thumb_tip=landmarks.landmarks[mp.hands.HandLandmark.THUMB_TIP]
-        thumb_ip=landmarks.landmarks[mp.hands.HandLandmark.THUMB_IP]
+        thumb_tip=landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+        thumb_ip=landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
         if (handedness=="right"and thumb_tip.x>thumb_ip.x) or (handedness=="left" and thumb_tip.x<thumb_ip.x):
             fingers.append(1)
         return "scroll up" if sum(fingers)==5 else "scroll down" if len(fingers)==0 else "none"
