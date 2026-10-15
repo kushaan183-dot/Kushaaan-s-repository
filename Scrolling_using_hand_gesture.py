@@ -16,7 +16,7 @@ def detect_gesture(landmarks,handedness):
         thumb_ip=landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
         if (handedness=="right"and thumb_tip.x>thumb_ip.x) or (handedness=="left" and thumb_tip.x<thumb_ip.x):
             fingers.append(1)
-        return "scroll up" if sum(fingers)==5 else "scroll down" if len(fingers)==0 else "none"
+        return "scroll up" if sum(fingers)==5 else sum(fingers)==0 
 cap=cv2.VideoCapture(0)
 cap.set(3,CAMERA_WIDTH)
 cap.set(4,CAM_HEIGHT)
