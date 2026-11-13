@@ -1,0 +1,7 @@
+LIVE OBJECT DETECTOR: SETUP NOTE
+Needs: Python 3.8 or newer, a webcam, OpenCV 4.7 or newer (opencv-python, NOT opencv-python-headless) and numpy.
+1. Keep these files together in one folder: live_detect.py, labels.json, detector.onnx, requirements.txt.
+2. Open the folder in VS Code and open its terminal (the terminal must be inside the folder).
+3. python -m pip install -r requirements.txt
+4. python live_detect.py   (click the window and press q to stop)
+No account, no key, no internet needed after the install. The picture never leaves your computer.

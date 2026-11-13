@@ -1,0 +1,82 @@
+LIVE OBJECT DETECTOR  (Grades 8-12)
+
+WHAT YOU WILL DO
+You get a program that watches your camera. The picture-to-numbers part is done for you.
+YOU write the detection logic: you score every guess the AI model makes, pick the best name for each guess,
+keep the sure boxes, remove duplicates, and draw each box with its name.
+
+WHAT YOU NEED
+- Python 3.8 or newer, and a webcam.
+- The folder you were given: live_detect.py (your starter), labels.json, detector.onnx, requirements.txt.
+
+SET UP (once)
+1. Open the folder in VS Code, then open VS Code's terminal. The terminal must be inside the folder.
+2. Install:  python -m pip install -r requirements.txt
+3. Run:      python live_detect.py
+   A window opens and shows your camera. Nothing is drawn yet, and the terminal prints  objects found: []
+   That is correct for now: the starter has TODOs that you fill in.
+   To stop it, click the window and press q. If nothing responds, press Ctrl+C in the terminal.
+
+STEP 1: MEET THE MODEL (3 min)
+Open live_detect.py and read the comments marked (given). Answer these from the comments, no coding yet:
+  - How many guesses does the model make for one picture?  (8400)
+  - How many numbers does each guess have, and what are they?  (85: 4 box, 1 "is there an object?", 80 name scores)
+  - Why is the picture padded with grey before it goes into the model?
+
+STEP 2: SCORE THE GUESSES (5 min)
+Inside detect(), write TODO 1 and TODO 2. The hints are in the comments.
+  TODO 1: scores = how sure the model is that an object is here, times how sure it is about each name.
+          Check: print(scores.shape) shows (8400, 80). Delete the print afterwards.
+  TODO 2: class_ids = the best name for each guess. confidences = how sure it is about that name.
+
+STEP 3: KEEP THE SURE BOXES (6 min)
+Write TODO 3 and TODO 4.
+  TODO 3: keep = the guesses that are sure enough (MIN_SCORE) after duplicates are merged (0.5).
+  TODO 4: return a list of (name, box) for every guess you kept.
+Run it with the camera pointed at something (a cup, a bottle, yourself). The terminal should print, for example:
+  objects found: ['cup']
+If it prints [] hold something in front of the camera and run again.
+
+STEP 4: DRAW THEM (3 min)
+Inside the camera loop, write TODO 5a (the box) and TODO 5b (the name). Run it.
+Now point the camera at your desk. In your head, give the whole picture ONE label (for example "desk").
+Write down: one thing the detector named right, one it got wrong, and one thing your single label would have missed.
+
+STEP 5: CHANGE HOW SURE IT MUST BE (3 min)
+Near the top change  MIN_SCORE = 0.5  to 0.2. Run it. Then try 0.8. What happens to the boxes?
+Put it back to the value you like best.
+
+STEP 6: SHOW IT (2 min)
+Take a screenshot of your boxes and names (on Windows press Win + Shift + S). Save it as detector.png.
+
+FINAL MISSION (group class, 15 extra minutes)
+Change detect() or the loop so that your program does ONE new thing. Choose one:
+  A. Show only people. Ignore everything else.
+  B. Show red text PHONE DOWN! when it sees a cell phone.
+  C. Show a big number: how many people it sees.
+  D. Save a photo called pet.jpg the first time it sees a dog or a cat.
+Write the code yourself. Your teacher has an answer for each one if you are stuck.
+
+SHOW YOUR PARENT (say it in one sentence)
+"My program watches the camera and names everyday things, like a cup, a bottle or a person.
+ I wrote the code that scores the model's guesses, keeps the sure ones and draws them."
+
+IF SOMETHING GOES WRONG
+- "No module named cv2": do set up step 2 again, in the same terminal you run Python from.
+- FileNotFoundError about labels.json or detector.onnx: your terminal is not inside the folder.
+  Open the folder in VS Code and use its terminal.
+- ValueError: operands could not be broadcast together with shapes (8400,) (8400,80): in TODO 1 you used
+  output[:, 4]. Use output[:, 4:5] so it keeps its column and lines up with the 80 name scores.
+- TypeError: Can't parse 'class_ids' (or 'scores') ... sequence protocol: in TODO 2 you left out axis=1,
+  so you got ONE number for the whole picture instead of one for each guess.
+- The list shows the same name dozens of times, like ['car', 'car', 'car', ...]: check TODO 1 (it must multiply,
+  not add) and TODO 3 (MIN_SCORE first, then 0.5).
+- IndexError: list index out of range: in TODO 4 the name is NAMES[class_ids[i]], not NAMES[i].
+- ValueError: too many values to unpack (expected 2): in TODO 4 return (name, box) pairs, not just names.
+- An error that mentions imshow: your OpenCV cannot open windows. Run these two lines:
+      python -m pip uninstall -y opencv-python-headless
+      python -m pip install opencv-python
+- The program ends at once and no window opens: the camera is busy or blocked. Close Zoom, Teams and other apps
+  that use the camera. On Windows: Settings > Privacy > Camera > allow desktop apps.
+- The window does not close with the X button: click the window and press q.
+- The video is not smooth: this is normal. The model looks at every picture, and that takes time.

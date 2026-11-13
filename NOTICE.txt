@@ -1,0 +1,13 @@
+THIRD-PARTY NOTICE
+
+detector.onnx is the YOLOX-S object detection model (trained on the COCO dataset, 80 everyday object classes).
+  YOLOX: Copyright (c) 2021-2022 Megvii Inc. All rights reserved.
+  Source of this file: the OpenCV Model Zoo, folder models/object_detection_yolox
+  https://github.com/opencv/opencv_zoo/tree/main/models/object_detection_yolox
+  YOLOX project: https://github.com/Megvii-BaseDetection/YOLOX
+  Licence: Apache License, Version 2.0. A copy is in LICENSE-YOLOX-Apache-2.0.txt (the same folder as this file).
+  The model file is used as it is. It has not been changed.
+
+labels.json lists the names of the 80 COCO classes the model knows, plus the 1000 ImageNet class names.
+
+live_detect.py, the instructions and the other files in this folder were written by Codingal.
