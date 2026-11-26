@@ -29,14 +29,14 @@ colour = lambda near: cv2.applyColorMap((near * 255).astype(np.uint8), cv2.COLOR
 
 
 def depth(picture, size=252):                       # how near every pixel is: 0 = far, 1 = near
-    small=cv2.resize(picture,(round(picture.shape[1]*size/picture.shape[0]),size))   # (given) placeholder: a smaller version of the picture. Replace it.
+    small=cv2.resize(picture,(round(picture.shape[1]*size/picture.shape[0]/14)*14,size))   # (given) placeholder: a smaller version of the picture. Replace it.
     x=((cv2.cvtColor(small,cv2.COLOR_BGR2RGB).astype(np.float32)/255-MEAN)/STD).transpose(2,0,1)[None]
     near=model.run(None, {model.get_inputs()[0].name: x})[0][0]
-    near = np.zeros((size, size), np.float32)       # (given) placeholder: "everything is equally far". Replace it.
+           # (given) placeholder: "everything is equally far". Replace it.
     return cv2.resize((near - near.min())/ (near.max()-near.min()+near.min()+1e-6),picture.shape[1::-1])   # (given) placeholder: the raw numbers. Replace it.
 
 
-def wobble(photo, near, frames=30):                 # near and far pixels slide opposite ways: that looks 3D
+def wobble(photo, near, frames=240):                 # near and far pixels slide opposite ways: that looks 3D
     # (given) C: the x and y position of every pixel, as two tables of numbers.
     xs, ys = np.meshgrid(np.arange(near.shape[1],dtype=np.float32),np.arange(near.shape[0],dtype=np.float32))
     shifts = [(WOBBLE*np.sin(2 * np.pi * i / frames)*(near-0.5)).astype(np.float32) for i in range(frames)]   # (given) placeholder: no wobble. Replace it.
